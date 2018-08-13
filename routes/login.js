@@ -9,7 +9,6 @@ router.post("/", (req, res, next) => {
       session: false
     },
     (err, user, info) => {
-      res.json({err: "Wher"})
       if (err) return next(err);
 
       req.login(user, err => {
