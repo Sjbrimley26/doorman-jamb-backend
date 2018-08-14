@@ -24,6 +24,7 @@ const verifyPassword = async (email, password, next) => {
     return [data.Item.password.S, data.Item.email.S];
   });
 
+  /*
   const passwordMatch = await bcryptCompare(password, hash).then(match => {
     if (match) {
       return true;
@@ -31,7 +32,8 @@ const verifyPassword = async (email, password, next) => {
       return false;
     }
   });
-
+  */
+  let passwordMatch = await bcrypt.compare(password, hash);
   if (passwordMatch) return user;
   return next(new Error("Invalid password!"));
 
