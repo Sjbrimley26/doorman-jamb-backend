@@ -1,4 +1,4 @@
-const { verifyPassword } = require("./utilities");
+const { verifyPassword, parseDDB } = require("./utilities");
 
 const { getItem } = require("./db");
 
@@ -8,46 +8,50 @@ const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
-const localStrat = new LocalStrategy({
-  usernameField: 'email',
-  session: false
-},
+passport.use(new LocalStrategy(
+  {
+    usernameField: 'email',
+    session: false,
+    successRedirect: "/",
+    failureRedirect: "/login"
+  },
 
-function (email, password, next) {
-  verifyPassword(email, password, next)
-    .then(user => {
-      return next(null, user, {
-        message: "Logged in successfully!"
-      });
-    })
-    .catch(err => next(err));
+  function (email, password, next) {
+    verifyPassword(email, password, next)
+      .then(user => {
+        return next(null, user, {
+          message: "Logged in successfully!"
+        });
+      })
+      .catch(err => next(err));
+  })
+  
+);
 
-});
 
-const jwtStrat = new JWTStrategy({
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET,
-  session: false
-},
+passport.use(new JWTStrategy({
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT_SECRET,
+    session: false,
+    successRedirect: "/",
+    failureRedirect: "/login"
+  },
 
-async function (jwtPayload, cb) {
-  const params = {
-    TableName: "doormanUsers",
-    Key: {
-      "email": {
-        S: jwtPayload.username
+  async function (jwtPayload, cb) {
+
+    const params = {
+      TableName: "doormanUsers",
+      Key: {
+        "email": {
+          S: jwtPayload.user
+        }
       }
-    }
-  };
+    };
 
-  getItem(params)
-    .then(user => cb(null, user))
-    .catch(err => cb(err));
+    getItem(params)
+      .then(user => parseDDB(user))
+      .then(user => cb(null, user))
+      .catch(err => cb(err));
 
-});
-
-module.exports = {
-  passport,
-  localStrat,
-  jwtStrat
-};
+  }));
+  

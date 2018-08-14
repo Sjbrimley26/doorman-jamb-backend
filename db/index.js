@@ -1,4 +1,9 @@
 const aws = require("aws-sdk");
+
+aws.config.update({
+  region: 'us-west-2'
+})
+
 const dynamoDB = new aws.DynamoDB();
 
 const { promisify } = require("util");
