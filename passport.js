@@ -12,10 +12,7 @@ passport.use(new LocalStrategy(
   {
     usernameField: 'email',
     session: false,
-    successRedirect: "/",
-    failureRedirect: "/login"
   },
-
   function (email, password, next) {
     verifyPassword(email, password, next)
       .then(user => {
@@ -33,8 +30,6 @@ passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
     session: false,
-    successRedirect: "/",
-    failureRedirect: "/login"
   },
 
   async function (jwtPayload, cb) {
