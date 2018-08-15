@@ -8,11 +8,11 @@ require("dotenv").config();
 
 router.post("/", (req, res, next) => {
   passport.authenticate('local', {
-      session: false,
+      session: false
     },
     (err, user, info) => {
       if (err) return next(err);
-
+      if (!user) return res.json({ message: "Invalid username or password!" });
       req.login(user, err => {
         if (err) return next(err);
 

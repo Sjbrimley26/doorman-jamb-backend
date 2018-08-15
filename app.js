@@ -6,11 +6,10 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
-app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -32,7 +31,6 @@ app.use("/", routes.root);
 app.use("/profile", passport.authenticate('jwt', {session:false}), routes.profile);
 
 passport.serializeUser(function (user, done) {
-  console.log("SERIALIZE", user);
   done(null, user);
 });
 

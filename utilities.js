@@ -21,22 +21,16 @@ const verifyPassword = async (email, password, next) => {
   };
 
   const [hash, user] = await getItem(params).then(data => {
+    if (!data.Item) return [undefined, undefined];
     return [data.Item.password.S, data.Item.email.S];
   });
 
-  /*
-  const passwordMatch = await bcryptCompare(password, hash).then(match => {
-    if (match) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  */
+  if (!user) return undefined;
+
   let passwordMatch = await bcrypt.compare(password, hash);
   
   if (passwordMatch) return user;
-  return next(new Error("Invalid password!"));
+  return undefined;
 
 };
 
