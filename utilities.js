@@ -29,7 +29,11 @@ const verifyPassword = async (email, password, next) => {
 
   let passwordMatch = await bcrypt.compare(password, hash);
   
-  if (passwordMatch) return user;
+  if (passwordMatch) {
+    let { password, ...details } = user;
+    return details;
+  }
+
   return undefined;
 
 };
