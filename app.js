@@ -13,7 +13,19 @@ app.use(bodyParser.urlencoded({
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers", 
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "POST, GET, OPTIONS"
+  );
+
+  if (req.method == 'OPTIONS') {
+    res.sendStatus(204);
+  }
+
   next();
 });
 
@@ -25,7 +37,7 @@ require("./passport");
 
 app.use(passport.initialize());
 
-app.use("/newAccount", routes.newAccount);
+app.use("/newAccount", passport.authenticate('jwt', {session:false}), routes.newAccount);
 app.use("/login", routes.login);
 app.use("/", routes.root);
 app.use("/profile", passport.authenticate('jwt', {session:false}), routes.profile);
