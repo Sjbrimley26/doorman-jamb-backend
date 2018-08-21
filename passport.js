@@ -1,4 +1,4 @@
-const { verifyPassword, parseDDB } = require("./utilities");
+const { verifyPassword, parseDDB, removePassword } = require("./utilities");
 
 const { getItem } = require("./db");
 
@@ -45,6 +45,7 @@ passport.use(new JWTStrategy({
 
     getItem(params)
       .then(user => parseDDB(user))
+      .then(user => removePassword(user))
       .then(user => cb(null, user))
       .catch(err => cb(err));
 

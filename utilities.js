@@ -30,8 +30,7 @@ const verifyPassword = async (email, password, next) => {
   let passwordMatch = await bcrypt.compare(password, hash);
   
   if (passwordMatch) {
-    let { password, ...details } = user;
-    return details;
+    return user;
   }
 
   return undefined;
@@ -39,15 +38,21 @@ const verifyPassword = async (email, password, next) => {
 };
 
 // Only works for string properties
-const parseDDB = DDBobj => {
-  return Promise.resolve(Object.keys(DDBobj.Item).reduce((newObj, key) => {
+const parseDDB = async DDBobj => {
+  return Object.keys(DDBobj.Item).reduce((newObj, key) => {
     return _.set(newObj, key, DDBobj.Item[key].S)
-  }, {}));
+  }, {});
+};
+
+const removePassword = async obj => {
+  let { password, ...details } = obj;
+  return details;
 };
 
 module.exports = {
   verifyPassword,
   bcryptCompare,
   bcryptHash,
-  parseDDB
+  parseDDB,
+  removePassword
 }
