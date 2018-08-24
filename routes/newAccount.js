@@ -6,8 +6,14 @@ const { putItem } = require("../db");
 router.post("/", (req, res, next) => {
   const {
     email,
-    password
+    password,
+    name,
+    type,
+    priceRange
   } = req.body;
+
+  console.log(req.body);
+  console.log(req.data);
 
   if (!email || !password) next(new Error("Email or password missing!"));
   
@@ -21,6 +27,15 @@ router.post("/", (req, res, next) => {
         },
         "password": {
           S: hash
+        },
+        "name": {
+          S: name
+        },
+        "type": {
+          S: type
+        },
+        "priceRange": {
+          S: priceRange
         }
       },
       TableName: "doormanUsers",

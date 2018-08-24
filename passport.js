@@ -33,7 +33,6 @@ passport.use(new JWTStrategy({
   },
 
   async function (jwtPayload, cb) {
-    console.log(jwtPayload)
     const params = {
       TableName: "doormanUsers",
       Key: {
