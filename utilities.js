@@ -1,9 +1,6 @@
 const { getItem } = require("./db");
-const { promisify } = require("util");
 
 const bcrypt = require("bcryptjs");
-const bcryptCompare = promisify(bcrypt.compare.bind(bcrypt));
-const bcryptHash = promisify(bcrypt.compare.bind(bcrypt));
 
 const _ = require("lodash");
 
@@ -27,12 +24,14 @@ const verifyPassword = async (email, password, next) => {
 
   if (!user) return undefined;
 
+  console.log(`Password: ${password}, Hash: ${hash}`)
   let passwordMatch = await bcrypt.compare(password, hash);
   
   if (passwordMatch) {
     return user;
   }
 
+  console.log("Passwords don't match!");
   return undefined;
 
 };
@@ -51,8 +50,6 @@ const removePassword = async obj => {
 
 module.exports = {
   verifyPassword,
-  bcryptCompare,
-  bcryptHash,
   parseDDB,
   removePassword
 }

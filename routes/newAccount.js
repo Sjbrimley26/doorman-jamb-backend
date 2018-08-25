@@ -12,9 +12,6 @@ router.post("/", (req, res, next) => {
     priceRange
   } = req.body;
 
-  console.log(req.body);
-  console.log(req.data);
-
   if (!email || !password) next(new Error("Email or password missing!"));
   
   bcrypt.hash(password, 10, function (err, hash) {

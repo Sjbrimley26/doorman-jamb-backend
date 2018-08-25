@@ -41,6 +41,7 @@ app.use("/newAccount", passport.authenticate('jwt', {session:false}), routes.new
 app.use("/login", routes.login);
 app.use("/", routes.root);
 app.use("/profile", passport.authenticate('jwt', {session:false}), routes.profile);
+app.use("/changePassword", passport.authenticate('jwt', {session:false}), routes.changePassword);
 
 passport.serializeUser(function (user, done) {
   done(null, user);

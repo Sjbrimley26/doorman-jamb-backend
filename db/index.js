@@ -10,9 +10,11 @@ const { promisify } = require("util");
 
 const getItem = promisify(dynamoDB.getItem.bind(dynamoDB));
 const putItem = promisify(dynamoDB.putItem.bind(dynamoDB));
+const updateItem = promisify(dynamoDB.updateItem.bind(dynamoDB));
 
 module.exports = {
   dynamoDB,
   getItem,
-  putItem
+  putItem,
+  updateItem
 };
